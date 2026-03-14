@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "app/dumbydata.js", "app/dumbydata.js"  ],
   "exclude": ["node_modules"]
 }

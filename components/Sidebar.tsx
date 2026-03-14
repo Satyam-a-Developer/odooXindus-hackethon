@@ -1,8 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
 
 type NavItem = {
   name: string
@@ -38,7 +47,6 @@ const SECTIONS: Section[] = [
       }
     ]
   },
-
   {
     title: 'PRODUCTS',
     items: [
@@ -53,14 +61,12 @@ const SECTIONS: Section[] = [
       }
     ]
   },
-
   {
     title: 'OPERATIONS',
     items: [
       {
         name: 'Receipts',
         href: '/receipts',
-        badge: 3,
         icon: (
           <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
             <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.5"/>
@@ -70,7 +76,6 @@ const SECTIONS: Section[] = [
       {
         name: 'Deliveries',
         href: '/deliveries',
-        badge: 2,
         icon: (
           <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
             <path d="M5 12h14" stroke="currentColor" strokeWidth="1.5"/>
@@ -80,7 +85,6 @@ const SECTIONS: Section[] = [
       {
         name: 'Transfers',
         href: '/transfers',
-        badge: 1,
         icon: (
           <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4">
             <path d="M4 12h16M12 4l4 4-4 4M12 20l-4-4 4-4" stroke="currentColor" strokeWidth="1.5"/>
@@ -107,7 +111,6 @@ const SECTIONS: Section[] = [
       }
     ]
   },
-
   {
     title: 'SETTINGS',
     items: [
@@ -149,56 +152,99 @@ function NavItemLink({ item, active }: { item: NavItem; active: boolean }) {
   )
 }
 
-export default function Sidebar() {
+export default function SidebarSheet() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-[250px] min-h-screen bg-[#0f172a]/95 backdrop-blur text-slate-200 flex flex-col border-r border-slate-800">
+    <>
+      {/* Sheet Trigger for Mobile */}
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="ghost" className="md:hidden">
+            Menu
+          </Button>
+        </SheetTrigger>
 
-      {/* Logo */}
-      <div className="px-5 py-6 border-b border-slate-800">
-        <h1 className="text-xl font-bold tracking-tight">
-          Core<span className="text-blue-400">Inventory</span>
-        </h1>
-      </div>
+        <SheetContent side="left" className="w-[250px] bg-[#0f172a]/95 backdrop-blur text-slate-200 flex flex-col border-r border-slate-800 p-0">
+          
+          {/* Header / Logo */}
+          <SheetHeader className="px-5 py-6 border-b border-slate-800">
+            <SheetTitle className="text-xl font-bold tracking-tight">
+              Core<span className="text-blue-400">Inventory</span>
+            </SheetTitle>
+          </SheetHeader>
 
-      {/* Navigation */}
-      <div className="flex-1 px-3 py-4 space-y-6">
+          {/* Navigation */}
+          <div className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+            {SECTIONS.map(section => (
+              <div key={section.title}>
+                <p className="text-[11px] text-slate-500 font-semibold tracking-widest mb-2 px-3">
+                  {section.title}
+                </p>
 
-        {SECTIONS.map(section => (
-          <div key={section.title}>
+                <div className="space-y-1">
+                  {section.items.map(item => (
+                    <NavItemLink
+                      key={item.href}
+                      item={item}
+                      active={pathname === item.href}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
 
-            <p className="text-[11px] text-slate-500 font-semibold tracking-widest mb-2 px-3">
-              {section.title}
-            </p>
-
-            <div className="space-y-1">
-              {section.items.map(item => (
-                <NavItemLink
-                  key={item.href}
-                  item={item}
-                  active={pathname === item.href}
-                />
-              ))}
+          {/* Profile */}
+          <div className="border-t border-slate-800 p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold">
+              IM
             </div>
 
+            <div>
+              <p className="text-sm font-medium">Inventory Manager</p>
+              <p className="text-xs text-slate-500">Admin</p>
+            </div>
           </div>
-        ))}
 
-      </div>
+        </SheetContent>
+      </Sheet>
 
-      {/* Profile */}
-      <div className="border-t border-slate-800 p-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold">
-          IM
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-[250px] min-h-screen bg-[#0f172a]/95 backdrop-blur text-slate-200 flex-col border-r border-slate-800">
+        <div className="px-5 py-6 border-b border-slate-800">
+          <h1 className="text-xl font-bold tracking-tight">
+            Core<span className="text-blue-400">Inventory</span>
+          </h1>
         </div>
-
-        <div>
-          <p className="text-sm font-medium">Inventory Manager</p>
-          <p className="text-xs text-slate-500">Admin</p>
+        <div className="flex-1 px-3 py-4 space-y-6">
+          {SECTIONS.map(section => (
+            <div key={section.title}>
+              <p className="text-[11px] text-slate-500 font-semibold tracking-widest mb-2 px-3">
+                {section.title}
+              </p>
+              <div className="space-y-1">
+                {section.items.map(item => (
+                  <NavItemLink
+                    key={item.href}
+                    item={item}
+                    active={pathname === item.href}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-
-    </aside>
+        <div className="border-t border-slate-800 p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white font-semibold">
+            IM
+          </div>
+          <div>
+            <p className="text-sm font-medium">Inventory Manager</p>
+            <p className="text-xs text-slate-500">Admin</p>
+          </div>
+        </div>
+      </aside>
+    </>
   )
 }

@@ -1,4 +1,4 @@
-"use client"; // needed to use useState/useEffect
+"use client";
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -25,11 +25,13 @@ export default function RootLayout({
 
   return (
     <html className={cn("font-sans", geist.variable)}>
-      <body className="flex">
+      <body className="flex h-screen overflow-hidden">
         {isLoggedIn && <Sidebar />}
-        <div className="flex-1">
+
+        <div className="flex-1 flex flex-col">
           {isLoggedIn && <Horizontal />}
-          <main className="flex-1 p-6">{children}</main>
+
+          <main className="flex-1 p-6 overflow-y-auto">{children}</main>
         </div>
       </body>
     </html>
